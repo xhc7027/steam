@@ -1,9 +1,8 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="HHH Lpr lFf">
     <q-layout-header>
       <q-toolbar
         color="primary"
-        :glossy="$q.theme === 'mat'"
         :inverted="$q.theme === 'ios'"
       >
         <q-btn
@@ -17,8 +16,7 @@
         </q-btn>
 
         <q-toolbar-title>
-          Quasar App
-          <div slot="subtitle">Running on Quasar v{{ $q.version }}</div>
+          检测中心
         </q-toolbar-title>
       </q-toolbar>
     </q-layout-header>
@@ -27,33 +25,7 @@
       v-model="leftDrawerOpen"
       :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null"
     >
-      <q-list
-        no-border
-        link
-        inset-delimiter
-      >
-        <q-list-header>Essential Links</q-list-header>
-        <q-item @click.native="openURL('http://quasar-framework.org')">
-          <q-item-side icon="school" />
-          <q-item-main label="Docs" sublabel="quasar-framework.org" />
-        </q-item>
-        <q-item @click.native="openURL('https://github.com/quasarframework/')">
-          <q-item-side icon="code" />
-          <q-item-main label="GitHub" sublabel="github.com/quasarframework" />
-        </q-item>
-        <q-item @click.native="openURL('https://discord.gg/5TDhbDg')">
-          <q-item-side icon="chat" />
-          <q-item-main label="Discord Chat Channel" sublabel="https://discord.gg/5TDhbDg" />
-        </q-item>
-        <q-item @click.native="openURL('http://forum.quasar-framework.org')">
-          <q-item-side icon="record_voice_over" />
-          <q-item-main label="Forum" sublabel="forum.quasar-framework.org" />
-        </q-item>
-        <q-item @click.native="openURL('https://twitter.com/quasarframework')">
-          <q-item-side icon="rss feed" />
-          <q-item-main label="Twitter" sublabel="@quasarframework" />
-        </q-item>
-      </q-list>
+      <hsb-nav />
     </q-layout-drawer>
 
     <q-page-container>
@@ -64,9 +36,10 @@
 
 <script>
 import { openURL } from 'quasar'
+import HsbNav from 'components/ui/nav'
 
 export default {
-  name: 'MyLayout',
+  name: 'DefaultLayout',
   data () {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop
@@ -74,6 +47,9 @@ export default {
   },
   methods: {
     openURL
+  },
+  components: {
+    HsbNav
   }
 }
 </script>

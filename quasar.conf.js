@@ -1,6 +1,8 @@
 // Configuration for your app
 
 module.exports = function (ctx) {
+  let path = require('path')
+
   return {
     // app plugins (/src/plugins)
     plugins: [
@@ -31,6 +33,11 @@ module.exports = function (ctx) {
           loader: 'eslint-loader',
           exclude: /(node_modules|quasar)/
         })
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias,
+          '@components': path.resolve(__dirname, './src/components'),
+          '@data': path.resolve(__dirname, './src/data')
+        }
       }
     },
     devServer: {
@@ -54,7 +61,10 @@ module.exports = function (ctx) {
         'QListHeader',
         'QItem',
         'QItemMain',
-        'QItemSide'
+        'QItemSide',
+        'QInput',
+        'QField',
+        'QBtnToggle'
       ],
       directives: [
         'Ripple'
