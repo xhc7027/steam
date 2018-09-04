@@ -23,6 +23,7 @@
 
     <q-layout-drawer
       v-model="leftDrawerOpen"
+      :width="240"
       :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null"
     >
       <hsb-nav />
