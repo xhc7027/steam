@@ -6,6 +6,7 @@ module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
+      'http'
     ],
     css: [
       'app.styl'

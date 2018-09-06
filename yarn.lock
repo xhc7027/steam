@@ -6402,6 +6402,12 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-cli-plugin-http@xujian/vue-cli-plugin-http:
+  version "0.0.4"
+  resolved "https://codeload.github.com/xujian/vue-cli-plugin-http/tar.gz/d70e68e88d21fa7fb069d501b6afac9554b4381b"
+  dependencies:
+    vue-http xujian/vue-http
+
 vue-eslint-parser@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-2.0.3.tgz#c268c96c6d94cfe3d938a5f7593959b0ca3360d1"
@@ -6416,6 +6422,12 @@ vue-eslint-parser@^2.0.3:
 vue-hot-reload-api@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.0.tgz#97976142405d13d8efae154749e88c4e358cf926"
+
+vue-http@xujian/vue-http:
+  version "1.0.0"
+  resolved "https://codeload.github.com/xujian/vue-http/tar.gz/92b623adab64c4a0aa96916ffbbb5ea5cc46319a"
+  dependencies:
+    axios "^0.18.0"
 
 vue-loader@15.2.7:
   version "15.2.7"

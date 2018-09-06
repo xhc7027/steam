@@ -141,6 +141,7 @@ export default {
   },
   mounted () {
     // this.$refs.orderSerialInput.focus()
+    console.info('create.vue ----- mounted', this.$http)
   },
   components: {
     HsbField
