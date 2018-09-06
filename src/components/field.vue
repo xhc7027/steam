@@ -74,7 +74,8 @@ export default {
   .q-btn-toggle
     flex-wrap wrap
     .q-btn
-      border-style: solid;
-      border-width: 0 1px 1px 0;
-      border-color: #fff;
+      border-style solid
+      border-width 0 1px 1px 0
+      border-color #fff
+      font-size 12px
 </style>

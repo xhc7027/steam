@@ -4,11 +4,26 @@
       <q-input v-model="orderSerial"
         ref="orderSerialInput"
         clearable autofocus
+        :before="[{icon: 'fas fa-barcode', handler () {}}]"
         float-label="机身条码" placeholder="输入" />
       <q-input v-model="appResultSerial"
         clearable
+        :before="[{icon: 'fas fa-barcode', handler () {}}]"
         float-label="APP检测结果条码" placeholder="输入" />
-      <div class="extra-items">
+      <div class="sku-questions">
+        <h4>SKU选项</h4>
+        <q-field label="具体型号" :label-width="2">
+          <q-input v-model="skuInputs[0].value"></q-input>
+        </q-field>
+        <hsb-field
+          v-for="(item, index) in skuInputs.filter(item => item.name !== 'deviceModel')"
+          :key="index"
+          :label="item.label"
+          v-model="item.value"
+          :options="item.options"
+        ></hsb-field>
+      </div>
+      <div class="extra-questions">
         <h4>手工输入选项</h4>
         <hsb-field
           v-for="(item, index) in manualInputs"
@@ -17,7 +32,7 @@
           :label="item.label"
           :name="item.name"
           v-model="item.value"
-          :multiple="item.multiple"
+          :multiple="item.multiple || false"
           :options="item.options"
         ></hsb-field>
       </div>
@@ -50,20 +65,57 @@ export default {
   name: 'create-page',
   data () {
     return {
-      orderSerial: '',
-      appResultSerial: '',
+      orderSerial: '', // 机身条码
+      appResultSerial: '', // 屏幕条码(app检测结果)
+      skuInputs: [
+        {
+          name: 'deviceModel',
+          label: '具体型号',
+          value: ''
+        },
+        {
+          name: 'color',
+          label: '颜色',
+          value: '',
+          options: []
+        },
+        {
+          name: 'disk',
+          label: '容量',
+          value: '',
+          options: ['1GB', '2GB', '3GB', '4GB', '8GB']
+        },
+        {
+          name: 'warranty',
+          label: '保修期',
+          value: '',
+          options: ['一个月以上', '一个月以下或过保']
+        },
+        {
+          name: 'lock',
+          label: '账户锁',
+          value: '',
+          options: ['无锁', '有锁']
+        },
+        {
+          name: 'lock',
+          label: '官换机',
+          value: '',
+          options: ['否', '是']
+        }
+      ],
       manualInputs: [
         {
           name: 'networks',
           label: '制式',
           options: networksData,
-          value: '1',
+          value: '',
           multiple: true
         },
         {
           name: 'watered',
           label: '进水',
-          value: '1',
+          value: '',
           multiple: false,
           options: [
             {
@@ -79,7 +131,7 @@ export default {
         {
           name: 'repired',
           label: '维修',
-          value: '1',
+          value: '',
           multiple: true,
           options: repairedData
         }
