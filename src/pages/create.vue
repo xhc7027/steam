@@ -10,7 +10,7 @@
         clearable
         :before="[{icon: 'fas fa-barcode', handler () {}}]"
         float-label="APP检测结果条码" placeholder="输入" />
-      <div class="sku-questions">
+      <div class="sku-questions" v-show="stage === 2">
         <h4>SKU选项</h4>
         <q-field label="具体型号" :label-width="2">
           <q-input v-model="skuInputs[0].value"></q-input>
@@ -23,7 +23,7 @@
           :options="item.options"
         ></hsb-field>
       </div>
-      <div class="extra-questions">
+      <div class="extra-questions" v-show="stage === 2">
         <h4>手工输入选项</h4>
         <hsb-field
           v-for="(item, index) in manualInputs"
@@ -35,19 +35,20 @@
           :multiple="item.multiple || false"
           :options="item.options"
         ></hsb-field>
+        <p>&nbsp;</p>
+        <q-field label="备注" :label-width="2">
+          <q-input v-model="memo"
+            type="textarea"
+            color="tertiary"
+            rows="4"
+            text-color="#666"
+            inverted-light
+          ></q-input>
+        </q-field>
       </div>
       <p>&nbsp;</p>
-      <q-field label="备注" :label-width="2">
-        <q-input v-model="memo"
-          type="textarea"
-          color="tertiary"
-          rows="4"
-          text-color="#666"
-          inverted-light
-        ></q-input>
-      </q-field>
-      <p>&nbsp;</p>
       <q-btn
+        @click="save1()"
         color="secondary"
         width="200"
         size="md"
@@ -65,6 +66,7 @@ export default {
   name: 'create-page',
   data () {
     return {
+      stage: 1, // 保存步骤 1=扫描条码 2=保存手填选项
       orderSerial: '', // 机身条码
       appResultSerial: '', // 屏幕条码(app检测结果)
       skuInputs: [
@@ -140,8 +142,20 @@ export default {
     }
   },
   mounted () {
-    // this.$refs.orderSerialInput.focus()
-    console.info('create.vue ----- mounted', this.$http)
+    this.$refs.orderSerialInput.focus()
+  },
+  methods: {
+    save1 () {
+      console.info('save1--=---', this)
+      this.$http.call('/bind', {
+        data: {
+          orderSerial: '',
+          resultSerial: ''
+        }
+      }).then(response => {
+        console.info(response)
+      })
+    }
   },
   components: {
     HsbField
