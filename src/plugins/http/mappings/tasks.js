@@ -4,22 +4,14 @@ export default {
       path: '/bind', // 前端path
       to: '/bindDetectBarCode', // 后端path
       method: 'post',
-      head: [
-        {
-          name: '_interface',
-          value: 'det_getProfessionDetect'
-        }
-      ],
       params: [ // 传入参数转换
         {
           name: 'codeInfo',
-          value: '$orderSerial',
-          default: 4
+          value: '$orderSerial'
         },
         {
           name: 'uniqueKey',
-          value: '$resultSerial',
-          default: []
+          value: '$resultSerial'
         },
         {
           name: '_interface',
@@ -28,15 +20,41 @@ export default {
         {
           name: 'detVersion',
           value: '$version',
-          default: 'v1.0.'
+          default: 'v1.0.0'
         }
       ],
       fields: [
+        {
+          name: 'skuItems',
+          from: 'skuList'
+        },
+        {
+          name: 'extraItems',
+          from: 'checkList'
+        }
       ],
       converts: {
+        // converts 在 fields转换之后执行, 仅执行data部分
         default: (input) => {
-          let result = input
-          return result
+          let output = {
+            skuItems: input.skuItems.map(q => ({
+              name: 'field-' + q.questionId,
+              label: q.questionName,
+              options: q.answerList.map(a => ({
+                value: a.answerId,
+                label: a.answerName
+              }))
+            })),
+            extraItems: input.extraItems.map(q => ({
+              name: 'field-' + q.questionId,
+              label: q.questionName,
+              options: q.answerList.map(a => ({
+                value: a.answerId,
+                label: a.answerName
+              }))
+            }))
+          }
+          return output
         }
       }
     }
