@@ -6,7 +6,8 @@
       type="button"
       :label="item.label"
       :name="item.name"
-      v-model="item.value"
+      v-model="values[index]"
+      @input="onFieldChange"
       :multiple="item.multiple || false"
       :options="item.options"
     ></hsb-field>
@@ -19,13 +20,13 @@ import networksData from '@data/fields/networks'
 import repairedData from '@data/fields/repaired'
 
 export default {
-  name: 'sku-options',
+  name: 'sku-questions',
   props: {
-    items: Array,
-    value: ''
+    items: Array
   },
   data () {
     return {
+      values: [],
       demoItems: [
         {
           name: 'networks',
@@ -58,6 +59,13 @@ export default {
           options: repairedData
         }
       ]
+    }
+  },
+  mounted () {
+    this.values = this.items.map(item => '')
+  },
+  methods: {
+    onFieldChange () {
     }
   },
   components: {

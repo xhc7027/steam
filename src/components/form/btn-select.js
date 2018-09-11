@@ -60,10 +60,9 @@ export default {
           this.selected.push(value)
         }
       }
-      this.$emit('input', value, opt)
       this.$nextTick(() => {
         if (JSON.stringify(value) !== JSON.stringify(this.value)) {
-          this.$emit('change', value, opt)
+          this.$emit('input', value, opt)
         }
       })
     }

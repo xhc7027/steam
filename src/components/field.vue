@@ -7,6 +7,8 @@
       >
         <hsb-btn-select
           v-model="dataValue"
+          :name="name"
+          @input="onSelectChange"
           color="tertiary"
           text-color="#666666 "
           toggle-color='secondary'
@@ -60,6 +62,11 @@ export default {
   data () {
     return {
       dataValue: this.value
+    }
+  },
+  methods: {
+    onSelectChange () {
+      this.$emit('input', this.dataValue)
     }
   },
   components: {
