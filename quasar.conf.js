@@ -7,7 +7,8 @@ module.exports = function (ctx) {
     // app plugins (/src/plugins)
     plugins: [
       'http',
-      'filters'
+      'filters',
+      'notify'
     ],
     css: [
       'app.styl'

@@ -6405,8 +6405,10 @@ vm-browserify@0.0.4:
 vue-cli-plugin-http@xujian/vue-cli-plugin-http:
   version "0.0.4"
   resolved "https://codeload.github.com/xujian/vue-cli-plugin-http/tar.gz/d70e68e88d21fa7fb069d501b6afac9554b4381b"
-  dependencies:
-    vue-http xujian/vue-http
+
+"vue-cli-plugin-notify@https://github.com/xujian/vue-cli-plugin-notify":
+  version "0.0.4"
+  resolved "https://github.com/xujian/vue-cli-plugin-notify#2b7c9b4f446f521bb6aa0e52b29f724983a2741a"
 
 vue-eslint-parser@^2.0.3:
   version "2.0.3"

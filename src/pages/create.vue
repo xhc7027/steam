@@ -95,7 +95,6 @@ export default {
           resultSerial: this.resultSerial
         },
         beforeParams: input => {
-          console.info('beforeParams create.vue===================', this.skuResults, this.extraResults)
           this.skuItems.forEach(s => {
             s.selected = this.skuResults['field-' + s.id] || ''
           })
@@ -110,7 +109,10 @@ export default {
       }).then(response => {
         console.info('save2 response', response)
         this.stage = 3
+        this.notice('已保存')
       })
+    },
+    validate () {
     }
   },
   components: {
