@@ -2,10 +2,18 @@
   <q-page class="create-page page flex flex-center">
     <div class="container full-width">
       <q-input v-model="orderSerial"
+        name="orderSerial"
         ref="orderSerialInput"
         clearable autofocus
         :before="[{icon: 'fas fa-barcode', handler () {}}]"
-        float-label="机身条码" placeholder="输入" />
+        float-label="机身条码" placeholder="输入"
+        auto-complete="off"
+        v-validate="'required'"
+        :error="errors.has('orderSerial')" />
+      <div class="relative-position">
+        <span v-show="errors.has('orderSerial')"
+        class="help error">{{ errors.first('orderSerial') }}</span>
+      </div>
       <q-input v-model="resultSerial"
         clearable
         :before="[{icon: 'fas fa-barcode', handler () {}}]"

@@ -8,7 +8,8 @@ module.exports = function (ctx) {
     plugins: [
       'http',
       'filters',
-      'notify'
+      'notify',
+      'validate'
     ],
     css: [
       'app.styl'

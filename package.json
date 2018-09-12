@@ -8,8 +8,9 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "vue-cli-plugin-http": "xujian/vue-cli-plugin-http",
-    "vue-cli-plugin-notify": "https://github.com/xujian/vue-cli-plugin-notify"
+    "vue-cli-plugin-http": "https://github.com/xujian/vue-cli-plugin-http",
+    "vue-cli-plugin-notify": "https://github.com/xujian/vue-cli-plugin-notify",
+    "vue-cli-plugin-validate": "https://github.com/xujian/vue-cli-plugin-validate"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
