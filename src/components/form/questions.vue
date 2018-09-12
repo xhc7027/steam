@@ -7,7 +7,7 @@
       :label="item.label"
       :name="item.name"
       v-model="values[index]"
-      @input="onFieldChange"
+      @input="onFieldChange(item.name, $event)"
       :multiple="item.multiple || false"
       :options="item.options"
     ></hsb-field>
@@ -26,7 +26,7 @@ export default {
   },
   data () {
     return {
-      values: [],
+      values: {},
       demoItems: [
         {
           name: 'networks',
@@ -62,10 +62,12 @@ export default {
     }
   },
   mounted () {
-    this.values = this.items.map(item => '')
   },
   methods: {
-    onFieldChange () {
+    onFieldChange (name, value) {
+      console.info('onFieldCHange--------', this, name, value)
+      this.values[name] = value
+      this.$emit('input', this.values)
     }
   },
   components: {

@@ -1,6 +1,6 @@
 <template>
   <q-page class="create-page page flex flex-center">
-    <div class="container">
+    <div class="container full-width">
       <q-input v-model="orderSerial"
         ref="orderSerialInput"
         clearable autofocus
@@ -10,20 +10,20 @@
         clearable
         :before="[{icon: 'fas fa-barcode', handler () {}}]"
         float-label="APP检测结果条码" placeholder="输入" />
-      <div class="sku-questions" v-show="stage === 2">
+      <div class="sku-questions" v-show="stage > 1">
         <h4>SKU选项</h4>
         <hsb-questions
           :items="skuItems"
           v-model="skuResults">
           </hsb-questions>
       </div>
-      <div class="extra-questions" v-show="stage === 2">
+      <div class="extra-questions" v-show="stage > 1">
         <h4>手工输入选项</h4>
         <hsb-questions
           :items="extraItems"
           v-model="extraResults"></hsb-questions>
       </div>
-      <q-field label="备注" :label-width="2" v-show="stage === 2">
+      <q-field label="备注" :label-width="2" v-show="stage > 1">
         <q-input v-model="memo"
           type="textarea"
           color="tertiary"
@@ -33,6 +33,10 @@
         ></q-input>
       </q-field>
       <p>&nbsp;</p>
+      <div class="price-result" v-show="stage > 2">
+        <h6>估价结果</h6>
+        <p><span class="price">{{priceResult | money}}</span></p>
+      </div>
       <q-btn
         @click="save()"
         color="secondary"
@@ -58,7 +62,8 @@ export default {
       extraItems: [],
       skuResults: [],
       extraResults: [],
-      memo: ''
+      memo: '',
+      priceResult: 0
     }
   },
   mounted () {
@@ -83,6 +88,29 @@ export default {
         this.extraItems = response.extraItems
         this.stage = 2
       })
+    },
+    save2 () {
+      this.$http.call('/calc', {
+        data: {
+          resultSerial: this.resultSerial
+        },
+        beforeParams: input => {
+          console.info('beforeParams create.vue===================', this.skuResults, this.extraResults)
+          this.skuItems.forEach(s => {
+            s.selected = this.skuResults['field-' + s.id] || ''
+          })
+          this.extraItems.forEach(s => {
+            s.selected = this.extraResults['field-' + s.id] || ''
+          })
+          return Object.assign({}, {
+            skuItems: this.skuItems,
+            extraItems: this.extraItems
+          }, input)
+        }
+      }).then(response => {
+        console.info('save2 response', response)
+        this.stage = 3
+      })
     }
   },
   components: {
@@ -95,4 +123,9 @@ export default {
 .field.networks
   .q-btn
     width 25%
+.price-result
+  background #009688
+  padding 15px
+  color #fff
+  width 50%
 </style>

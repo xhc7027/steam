@@ -33,11 +33,14 @@ export default {
           from: 'checkList'
         }
       ],
-      converts: {
-        // converts 在 fields转换之后执行, 仅执行data部分
-        default: (input) => {
+      hooks: {
+        beforeParams: input => input,
+        afterParams: input => input,
+        beforeFields: input => input,
+        afterFields: input => {
           let output = {
             skuItems: input.skuItems.map(q => ({
+              id: q.questionId,
               name: 'field-' + q.questionId,
               label: q.questionName,
               options: q.answerList.map(a => ({
@@ -46,6 +49,7 @@ export default {
               }))
             })),
             extraItems: input.extraItems.map(q => ({
+              id: q.questionId,
               name: 'field-' + q.questionId,
               label: q.questionName,
               options: q.answerList.map(a => ({
