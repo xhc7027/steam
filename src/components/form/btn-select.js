@@ -5,6 +5,7 @@ export default {
   name: 'BtnSelect',
   props: {
     value: {
+      type: [String, Array],
       required: true
     },
     multiple: {
@@ -62,7 +63,7 @@ export default {
       }
       this.$nextTick(() => {
         if (JSON.stringify(value) !== JSON.stringify(this.value)) {
-          this.$emit('input', value, opt)
+          this.$emit('input', this.selected, opt)
         }
       })
     }

@@ -1,22 +1,22 @@
 <template>
-    <div class="field" :class="name">
-      <q-field
-        helper=""
-        :label="label"
-        :label-width="2"
-      >
-        <hsb-btn-select
-          v-model="dataValue"
-          :name="name"
-          @input="onSelectChange"
-          color="tertiary"
-          text-color="#666666 "
-          toggle-color='secondary'
-          :multiple="multiple"
-          :options="computedOptions"
-        ></hsb-btn-select>
-      </q-field>
-    </div>
+  <div class="field" :class="name">
+    <q-field
+      helper=""
+      :label="label"
+      :label-width="2"
+    >
+      <hsb-btn-select
+        v-model="dataValue"
+        :name="name"
+        @input="onSelectChange"
+        color="tertiary"
+        text-color="#666666 "
+        toggle-color='secondary'
+        :multiple="multiple"
+        :options="computedOptions"
+      ></hsb-btn-select>
+    </q-field>
+  </div>
 </template>
 <script>
 import HsbBtnSelect from 'components/form/btn-select'
@@ -33,7 +33,7 @@ export default {
       default: false
     },
     value: {
-      type: String,
+      type: [String, Array],
       default: ''
     },
     label: String,

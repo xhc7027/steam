@@ -1,7 +1,7 @@
 <template>
   <div class="options">
     <hsb-field
-      v-for="(item, index) in items"
+      v-for="(item, index) in computedItems"
       :key="index"
       type="button"
       :label="item.label"
@@ -16,49 +16,26 @@
 </template>
 <script>
 import HsbField from 'components/field'
-import networksData from '@data/fields/networks'
-import repairedData from '@data/fields/repaired'
 
 export default {
   name: 'sku-questions',
   props: {
     items: Array
   },
+  computed: {
+    // 整理传进来的items数据
+    computedItems () {
+      return this.items.map(item => {
+        if (item.label.indexOf('多选') !== -1) {
+          item.multiple = true
+        }
+        return item
+      })
+    }
+  },
   data () {
     return {
-      values: {},
-      demoItems: [
-        {
-          name: 'networks',
-          label: '制式',
-          options: networksData,
-          value: '',
-          multiple: true
-        },
-        {
-          name: 'watered',
-          label: '进水',
-          value: '',
-          multiple: false,
-          options: [
-            {
-              label: '无进水',
-              value: '无进水'
-            },
-            {
-              label: '有进水',
-              value: '有进水'
-            }
-          ]
-        },
-        {
-          name: 'repired',
-          label: '维修',
-          value: '',
-          multiple: true,
-          options: repairedData
-        }
-      ]
+      values: {}
     }
   },
   mounted () {
