@@ -39,24 +39,28 @@ export default {
         beforeFields: input => input,
         afterFields: input => {
           let output = {
-            skuItems: input.skuItems.map(q => ({
+            skuItems: input.skuItems ? input.skuItems.map(q => ({
               id: q.questionId,
               name: 'field-' + q.questionId,
               label: q.questionName,
+              finished: q.isSelect || false,
               options: q.answerList.map(a => ({
                 value: a.answerId,
-                label: a.answerName
+                label: a.answerName,
+                selected: a.select || false
               }))
-            })),
-            extraItems: input.extraItems.map(q => ({
+            })) : [],
+            extraItems: input.extraItems ? input.extraItems.map(q => ({
               id: q.questionId,
               name: 'field-' + q.questionId,
               label: q.questionName,
+              finished: q.isSelect || false,
               options: q.answerList.map(a => ({
                 value: a.answerId,
-                label: a.answerName
+                label: a.answerName,
+                selected: a.select || false
               }))
-            }))
+            })) : []
           }
           return output
         }

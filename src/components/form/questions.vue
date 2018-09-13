@@ -42,8 +42,9 @@ export default {
   },
   methods: {
     onFieldChange (name, value) {
-      console.info('onFieldCHange--------', this, name, value)
+      console.info('onFieldCHange--------', name, value)
       this.values[name] = value
+      console.info('onFieldCHange--------////', this.values)
       this.$emit('input', this.values)
     }
   },

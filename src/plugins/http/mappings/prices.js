@@ -42,7 +42,8 @@ export default {
             select: q.selected,
             answerList: q.options.map(a => ({
               answerId: a.value,
-              answerName: a.label
+              answerName: a.label,
+              select: a.selected || false
             }))
           }))
           input.checkList = input.checkList.map(q => ({
@@ -51,7 +52,8 @@ export default {
             select: q.selected,
             answerList: q.options.map(a => ({
               answerId: a.value,
-              answerName: a.label
+              answerName: a.label,
+              select: a.selected || false
             }))
           }))
           return input

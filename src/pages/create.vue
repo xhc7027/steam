@@ -21,14 +21,14 @@
       <div class="sku-questions" v-show="stage > 1">
         <h4>SKU选项</h4>
         <hsb-questions
-          :items="skuItems"
+          :items="computedSkuItems"
           v-model="skuResults">
           </hsb-questions>
       </div>
       <div class="extra-questions" v-show="stage > 1">
         <h4>手工输入选项</h4>
         <hsb-questions
-          :items="extraItems"
+          :items="computedExtraItems"
           v-model="extraResults"></hsb-questions>
       </div>
       <q-field label="备注" :label-width="2" v-show="stage > 1">
@@ -64,7 +64,7 @@ export default {
   data () {
     return {
       stage: 1, // 保存步骤 1=扫描条码 2=保存手填选项
-      orderSerial: '359167074097936', // 机身条码
+      orderSerial: 'C180329001100000000001', // 机身条码
       resultSerial: '2b4f822d81756917OrZZ21', // 屏幕条码(app检测结果)
       skuItems: [],
       extraItems: [],
@@ -76,6 +76,14 @@ export default {
   },
   mounted () {
     this.$refs.orderSerialInput.focus()
+  },
+  computed: {
+    computedSkuItems () {
+      return this.skuItems.filter(item => item)
+    },
+    computedExtraItems () {
+      return this.extraItems.filter(item => !item.finished)
+    }
   },
   methods: {
     save () {
@@ -103,11 +111,24 @@ export default {
           resultSerial: this.resultSerial
         },
         beforeParams: input => {
+          console.log('log-----beforeParams', this.skuResults)
           this.skuItems.forEach(s => {
-            s.selected = this.skuResults['field-' + s.id] || ''
+            let selected = this.skuResults['field-' + s.id]
+            if (selected) {
+              s.options.forEach(o => {
+                o.selected = selected.includes(o.value)
+              })
+              console.info('skuItems.forEach-----------------------', s.options)
+            }
           })
           this.extraItems.forEach(s => {
-            s.selected = this.extraResults['field-' + s.id] || ''
+            let selected = this.extraResults['field-' + s.id]
+            if (selected) {
+              s.options.forEach(o => {
+                o.selected = selected && selected.includes(o.value)
+              })
+              console.info('extraItems.forEach-----------------------', s.options)
+            }
           })
           return Object.assign({}, {
             skuItems: this.skuItems,
