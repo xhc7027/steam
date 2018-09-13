@@ -10,6 +10,10 @@ const routes = [
       {
         path: 'create',
         component: () => import('pages/create.vue')
+      },
+      {
+        path: 'search',
+        component: () => import('pages/search.vue')
       }
     ]
   }
