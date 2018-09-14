@@ -2,27 +2,48 @@
   <q-page class="create-page page flex flex-center">
     <div class="container full-width">
       <q-input v-model="orderSerial"
-      name="serial1"
-      ref="orderSerialInput"
-      clearable autofocus
-      :before="[{icon: 'fas fa-barcode', handler () {}}]"
-      float-label="机身条码" placeholder="输入"
-      auto-complete="off"
-      v-validate="'required'"
-      :error="$validator.errors.has('serial1')">
-      <validate-error
-        message="请输入机身条码"
-        ></validate-error>
+        name="serial1"
+        ref="orderSerialInput"
+        clearable autofocus
+        :before="[{icon: 'fas fa-barcode', handler () {}}]"
+        float-label="机身条码" placeholder="输入"
+        auto-complete="off"
+        spellcheck="false"
+        v-validate="'required'"
+        :disable="stage !== 1"
+        :error="$validator.errors.has('serial1')">
+          <validate-error
+            message="请输入机身条码"
+            ></validate-error>
       </q-input>
       <q-input v-model="resultSerial"
+        name="serial2"
         clearable
         :before="[{icon: 'fas fa-barcode', handler () {}}]"
-        float-label="APP检测结果条码" placeholder="输入" />
+        float-label="APP检测结果条码" placeholder="输入"
+        spellcheck="false"
+        v-validate="'required'"
+        :disable="stage !== 1"
+        :error="$validator.errors.has('serial2')">
+        <validate-error
+          message="请输入屏幕条码"
+          ></validate-error>
+        </q-input>
+        <q-btn
+          class="save-btn save1-btn"
+          v-show="stage === 1"
+          @click="save1()"
+          color="secondary"
+          width="200"
+          size="md"
+          label="提交"
+        />
       <div class="sku-questions" v-show="stage > 1">
         <h4>SKU选项</h4>
         <hsb-questions
           :items="computedSkuItems"
-          v-model="skuResults">
+          v-model="skuResults"
+          >
           </hsb-questions>
       </div>
       <div class="extra-questions" v-show="stage > 1">
@@ -46,7 +67,9 @@
         <p><span class="price">{{priceResult | money}}</span></p>
       </div>
       <q-btn
-        @click="save()"
+        class="save-btn save2-btn"
+        v-show="stage !== 1"
+        @click="save1()"
         color="secondary"
         width="200"
         size="md"
@@ -86,27 +109,26 @@ export default {
     }
   },
   methods: {
-    save () {
-      if (this.stage === 1) {
-        this.save1()
-      } else {
-        this.save2()
-      }
-    },
     save1 () {
-      this.$http.call('/bind', {
-        data: {
-          orderSerial: this.orderSerial,
-          resultSerial: this.resultSerial
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.$http.post('/bind', {
+            data: {
+              orderSerial: this.orderSerial,
+              resultSerial: this.resultSerial
+            }
+          }).then(response => {
+            this.skuItems = response.skuItems
+            this.extraItems = response.extraItems
+            this.stage = 2
+          })
+        } else {
+          this.$refs.orderSerialInput.focus()
         }
-      }).then(response => {
-        this.skuItems = response.skuItems
-        this.extraItems = response.extraItems
-        this.stage = 2
       })
     },
     save2 () {
-      this.$http.call('/calc', {
+      this.$http.post('/calc', {
         data: {
           resultSerial: this.resultSerial
         },
@@ -118,7 +140,6 @@ export default {
               s.options.forEach(o => {
                 o.selected = selected.includes(o.value)
               })
-              console.info('skuItems.forEach-----------------------', s.options)
             }
           })
           this.extraItems.forEach(s => {
@@ -127,7 +148,6 @@ export default {
               s.options.forEach(o => {
                 o.selected = selected && selected.includes(o.value)
               })
-              console.info('extraItems.forEach-----------------------', s.options)
             }
           })
           return Object.assign({}, {
@@ -138,6 +158,7 @@ export default {
       }).then(response => {
         console.info('save2 response', response)
         this.stage = 3
+        this.priceResult = response.price - 0
         this.notice('已保存')
       })
     },
@@ -151,12 +172,17 @@ export default {
 }
 </script>
 <style lang="stylus">
-.field.networks
-  .q-btn
-    width 25%
-.price-result
-  background #009688
-  padding 15px
-  color #fff
-  width 50%
+.create-page
+  .field.networks
+    .q-btn
+      width 25%
+  .price-result
+    background #009688
+    padding 15px
+    color #fff
+    width 50%
+  .save-btn
+    width 200px
+  .save1-btn
+    margin-top 1em
 </style>
