@@ -6,7 +6,7 @@
       type="button"
       :label="item.label"
       :name="item.name"
-      v-model="values[index]"
+      :value="values['field-' + item.id]"
       @input="onFieldChange(item.name, $event)"
       :multiple="item.multiple || false"
       :options="item.options"
@@ -42,9 +42,11 @@ export default {
   },
   methods: {
     onFieldChange (name, value) {
-      console.info('onFieldCHange--------', name, value)
-      this.values[name] = value
-      console.info('onFieldCHange--------////', this.values)
+      if (value.length) {
+        this.values[name] = value
+      } else {
+        delete this.values[name]
+      }
       this.$emit('input', this.values)
     }
   },

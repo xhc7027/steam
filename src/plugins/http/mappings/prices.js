@@ -35,7 +35,6 @@ export default {
       ],
       hooks: {
         afterParams: input => {
-          console.info('hooks afterPOaram======', input)
           input.skuList = input.skuList.map(q => ({
             questionName: q.label,
             questionId: q.id,
