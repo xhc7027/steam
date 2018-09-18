@@ -1,5 +1,5 @@
 <template>
-  <q-page class="create-page page flex flex-center">
+  <q-page class="create-page page flex">
     <div class="container full-width">
       <form action="/" data-vv-scope="bind">
         <q-input v-model="orderSerial"
@@ -12,7 +12,8 @@
           spellcheck="false"
           v-validate="'required'"
           :disable="stage !== 1"
-          :error="errors.has('serial1', 'bind')">
+          :error="errors.has('serial1', 'bind')"
+          @keyup.13="save1">
           <validate-error
             message="请输入机身条码"
             ></validate-error>
@@ -25,7 +26,8 @@
           spellcheck="false"
           v-validate="'required'"
           :disable="stage !== 1"
-          :error="errors.has('serial2', 'bind')">
+          :error="errors.has('serial2', 'bind')"
+          @keyup.13="save1">
           <validate-error
             message="请输入屏幕条码"
             ></validate-error>
@@ -46,7 +48,7 @@
           name="questions1"
           :items="computedSkuItems"
           v-model="skuResults"
-          v-validate="`full:${skuItems.length}`"
+          v-validate="`full:${computedSkuItems.length}`"
           data-vv-scope="calc">
           </hsb-questions>
       </div>
@@ -103,8 +105,8 @@ export default {
   data () {
     return {
       stage: 1, // 保存步骤 1=扫描条码 2=保存手填选项
-      orderSerial: 'C180329001100000000001', // 机身条码
-      resultSerial: '2b4f822d81756917OrZZ21', // 屏幕条码(app检测结果)
+      orderSerial: '', // 机身条码
+      resultSerial: '', // 屏幕条码(app检测结果)
       skuItems: [],
       extraItems: [],
       skuResults: [],

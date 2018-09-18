@@ -6406,6 +6406,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+"vue-cli-plugin-bus@https://github.com/xujian/vue-cli-plugin-bus":
+  version "1.0.5"
+  resolved "https://github.com/xujian/vue-cli-plugin-bus#de2aeab863d58288157e88a38bee5cbcfcc855ae"
+
 "vue-cli-plugin-http@https://github.com/xujian/vue-cli-plugin-http":
   version "1.0.5"
   resolved "https://github.com/xujian/vue-cli-plugin-http#546a65b0532e79885703f2005e3a905e2b8919c8"

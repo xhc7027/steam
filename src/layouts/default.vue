@@ -3,24 +3,10 @@
     <q-layout-header>
       <q-toolbar
         color="primary"
-        :inverted="$q.theme === 'ios'"
-      >
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          aria-label="Menu"
-        >
-          <q-icon name="menu" />
-        </q-btn>
-
-        <q-toolbar-title>
-          检测中心
-        </q-toolbar-title>
+        :inverted="$q.theme === 'ios'">
+        <hsb-title></hsb-title>
       </q-toolbar>
     </q-layout-header>
-
     <q-layout-drawer
       v-model="leftDrawerOpen"
       :width="240"
@@ -28,7 +14,6 @@
     >
       <hsb-nav />
     </q-layout-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -36,8 +21,8 @@
 </template>
 
 <script>
-import { openURL } from 'quasar'
 import HsbNav from 'components/ui/nav'
+import HsbTitle from 'components/ui/title'
 
 export default {
   name: 'DefaultLayout',
@@ -47,10 +32,15 @@ export default {
     }
   },
   methods: {
-    openURL
+  },
+  mounted () {
+    this.$bus.on('menuToggleClicked', () => {
+      this.leftDrawerOpen = !this.leftDrawerOpen
+    })
   },
   components: {
-    HsbNav
+    HsbNav,
+    HsbTitle
   }
 }
 </script>

@@ -9,7 +9,8 @@ module.exports = function (ctx) {
       'http',
       'filters',
       'notify',
-      'validate'
+      'validate',
+      'bus'
     ],
     css: [
       'app.styl'
@@ -67,7 +68,8 @@ module.exports = function (ctx) {
         'QItemSide',
         'QInput',
         'QField',
-        'QBtnToggle'
+        'QBtnToggle',
+        'QCollapsible'
       ],
       directives: [
         'Ripple'

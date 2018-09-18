@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "vue-cli-plugin-bus": "https://github.com/xujian/vue-cli-plugin-bus",
     "vue-cli-plugin-http": "https://github.com/xujian/vue-cli-plugin-http",
     "vue-cli-plugin-notify": "https://github.com/xujian/vue-cli-plugin-notify",
     "vue-cli-plugin-validate": "https://github.com/xujian/vue-cli-plugin-validate"
