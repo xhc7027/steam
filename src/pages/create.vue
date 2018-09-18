@@ -12,10 +12,10 @@
           spellcheck="false"
           v-validate="'required'"
           :disable="stage !== 1"
-          :error="$validator.errors.has('serial1')">
-            <validate-error
-              message="请输入机身条码"
-              ></validate-error>
+          :error="errors.has('serial1', 'bind')">
+          <validate-error
+            message="请输入机身条码"
+            ></validate-error>
         </q-input>
         <q-input v-model="resultSerial"
           name="serial2"
@@ -25,7 +25,7 @@
           spellcheck="false"
           v-validate="'required'"
           :disable="stage !== 1"
-          :error="$validator.errors.has('serial2')">
+          :error="errors.has('serial2', 'bind')">
           <validate-error
             message="请输入屏幕条码"
             ></validate-error>
