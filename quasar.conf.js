@@ -10,7 +10,8 @@ module.exports = function (ctx) {
       'filters',
       'notify',
       'validate',
-      'bus'
+      'bus',
+      'feathers'
     ],
     css: [
       'app.styl'
