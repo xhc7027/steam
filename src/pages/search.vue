@@ -27,6 +27,7 @@ export default {
   name: 'search-page',
   data () {
     return {
+      orderSerial: ''
     }
   },
   mounted () {

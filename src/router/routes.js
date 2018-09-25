@@ -14,6 +14,13 @@ const routes = [
       {
         path: 'search',
         component: () => import('pages/search.vue')
+      },
+      {
+        path: 'login',
+        component: () => import('pages/login.vue'),
+        meta: {
+          authRequired: false
+        }
       }
     ]
   }

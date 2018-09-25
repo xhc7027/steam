@@ -18,6 +18,14 @@ export default {
           value: '$extraItems'
         },
         {
+          name: 'user_id',
+          value: localStorage.getItem('userid')
+        },
+        {
+          name: 'login_token',
+          value: localStorage.getItem('token')
+        },
+        {
           name: 'detVersion',
           value: '$version',
           default: 'v1.0.0'

@@ -70,7 +70,8 @@ module.exports = function (ctx) {
         'QInput',
         'QField',
         'QBtnToggle',
-        'QCollapsible'
+        'QCollapsible',
+        'QTable'
       ],
       directives: [
         'Ripple'

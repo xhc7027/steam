@@ -11,7 +11,7 @@ Vue.use(VueRouter)
  */
 
 export default function (/* { store, ssrContext } */) {
-  const Router = new VueRouter({
+  const router = new VueRouter({
     scrollBehavior: () => ({ y: 0 }),
     routes,
 
@@ -21,5 +21,18 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  return Router
+  router.beforeEach((to, from, next) => {
+    if (to.meta.authRequired !== false && !localStorage.getItem('userid')) {
+      next({
+        path: '/login',
+        query: {
+          r: to.fullPath
+        }
+      })
+    } else {
+      next()
+    }
+  })
+
+  return router
 }
