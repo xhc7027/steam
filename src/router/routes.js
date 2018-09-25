@@ -16,6 +16,10 @@ const routes = [
         component: () => import('pages/search.vue')
       },
       {
+        path: 'scheduler',
+        component: () => import('pages/scheduler.vue')
+      },
+      {
         path: 'login',
         component: () => import('pages/login.vue'),
         meta: {

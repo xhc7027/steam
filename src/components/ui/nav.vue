@@ -9,6 +9,10 @@
       <q-item-side icon="search" />
       <q-item-main label="工单检索" sublabel="按订单号查询" />
     </q-item>
+    <q-item @click.native="$router.push('scheduler')">
+      <q-item-side icon="search" />
+      <q-item-main label="调度中心" sublabel="检测机实时状态" />
+    </q-item>
     </q-list>
 </template>
 
