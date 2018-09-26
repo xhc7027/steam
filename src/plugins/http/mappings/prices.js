@@ -18,7 +18,7 @@ export default {
           value: '$extraItems'
         },
         {
-          name: 'user_id',
+          name: 'login_user_id',
           value: localStorage.getItem('userid')
         },
         {
