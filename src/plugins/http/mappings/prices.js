@@ -18,14 +18,6 @@ export default {
           value: '$extraItems'
         },
         {
-          name: 'login_user_id',
-          value: localStorage.getItem('userid')
-        },
-        {
-          name: 'login_token',
-          value: localStorage.getItem('token')
-        },
-        {
           name: 'detVersion',
           value: '$version',
           default: 'v1.0.0'
@@ -43,6 +35,8 @@ export default {
       ],
       hooks: {
         afterParams: input => {
+          input.login_token = localStorage.getItem('token')
+          input.login_user_id = localStorage.getItem('userid')
           input.skuList = input.skuList.map(q => ({
             questionName: q.label,
             questionId: q.id,

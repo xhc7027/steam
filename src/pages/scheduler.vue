@@ -27,7 +27,6 @@
       <q-btn color="secondary">进料</q-btn>
       <p>&nbsp;</p>
       <q-btn color="secondary" @click="onCreateMessage">Message create</q-btn>
-      <q-btn color="secondary" @click="onCreateMessage2">Message create</q-btn>
     </div>
   </q-page>
 </template>
@@ -35,31 +34,32 @@
 export default {
   name: 'scheduler-page',
   mounted () {
-    console.log('scheduler---mounted---', this.$feathers)
-    let service = this.$feathers.service('messages')
-    this.$feathers.on('income', data => {
-      console.log('$feathers on income-==-======', data)
+    console.log('scheduler--[age--mounted---$feathers', this.$feathers)
+    this.$feathers.authenticate({
+      strategy: 'local',
+      email: '782135@qq.com',
+      password: 'Mko0nji**'
+    }).then((result) => {
+      console.log('log-----', 'feathers loggedin', result)
+      let service = this.$feathers.service('messages')
+      this.$feathers.io.on('pong', data => {
+        console.log('$feathers on pong////', data)
+      })
+      service.on('created', message =>
+        console.log('Created a message======', message))
+      service.on('updated', message =>
+        console.log('messages updated======', message))
+    }).catch(e => {
+      console.error('$feathers authentication error:=====', e)
     })
-    this.$feathers.on('pong', data => {
-      console.log('$feathers on pong////', data)
-    })
-    service.on('create', message =>
-      console.log('Created a message======', message))
-    service.on('updated', message =>
-      console.log('messages updated======', message))
-    service.on('income', message =>
-      console.log('messages income======', message))
   },
   methods: {
     onCreateMessage () {
-      // let service = this.$feathers.service('messages')
-      /* service.create({
-        text: 'Message from vue'
-      }) */
-      this.$feathers.emit('income')
-    },
-    onCreateMessage2 () {
-      this.$feathers.emit('messages created')
+      console.log('log-----', 'onCreateMessage')
+      let service = this.$feathers.service('messages')
+      service.create({
+        text: 'Brand new message from vue'
+      })
     }
   }
 }
