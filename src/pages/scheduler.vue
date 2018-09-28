@@ -4,61 +4,84 @@
       <h1>产线实时状况</h1>
       <p>&nbsp;</p>
       <div class="line row gutter-xs">
-        <div class="station col col-2">
+        <div class="station entry col col-2">
           <label>进料</label>
         </div>
-        <div class="station col col-2">
-          <label class="number">1</label>
+        <div v-for="x in [1,2,3,4,5,6,7,8,9]" :key="x" class="station col col-1">
+          <label class="number">{{x}}</label>
         </div>
-        <div class="station col col-2">
-          <label class="number">2</label>
-        </div>
-        <div class="station col col-2">
-          <label></label>
-        </div>
-        <div class="station col col-2">
-          <label></label>
-        </div>
-        <div class="station col col-2">
-          <label></label>
+        <div class="station col col-1">
+          <label>出料</label>
         </div>
       </div>
       <p>&nbsp;</p>
-      <q-btn color="secondary">进料</q-btn>
+      <h2>检测机模拟</h2>
       <p>&nbsp;</p>
-      <q-btn color="secondary" @click="onCreateMessage">Message create</q-btn>
+      <div class="row">
+        <q-btn color="secondary" @click="onCreateTask">进料</q-btn>
+        <q-btn color="secondary" @click="onMove">MOVE</q-btn>
+      </div>
+      <div class="row">
+        <q-btn color="negative" @click="onReset">RESET</q-btn>
+      </div>
     </div>
   </q-page>
 </template>
 <script>
 export default {
   name: 'scheduler-page',
+  data () {
+    return {
+      tasksService: null
+    }
+  },
   mounted () {
-    console.log('scheduler--[age--mounted---$feathers', this.$feathers)
+    console.log('scheduler--age--mounted---$feathers', this.$feathers)
     this.$feathers.authenticate({
       strategy: 'local',
-      email: '782135@qq.com',
-      password: 'Mko0nji**'
+      email: 'steam-web@huishoubao.com.cn',
+      password: '123456'
     }).then((result) => {
       console.log('log-----', 'feathers loggedin', result)
-      let service = this.$feathers.service('messages')
       this.$feathers.io.on('pong', data => {
         console.log('$feathers on pong////', data)
       })
-      service.on('created', message =>
-        console.log('Created a message======', message))
-      service.on('updated', message =>
-        console.log('messages updated======', message))
+      this.tasksService = this.$feathers.service('tasks')
+      this.tasksService.on('created', task => {
+        this.refresh()
+      })
+      this.tasksService.on('updated', task => {
+        this.refresh()
+      })
     }).catch(e => {
       console.error('$feathers authentication error:=====', e)
     })
   },
   methods: {
-    onCreateMessage () {
+    refresh () {
+      console.log('scheduler---refresh')
+      this.tasksService.find({}).then(results => {
+        console.info('results--', results)
+      })
+    },
+    onCreateTask () {
       console.log('log-----', 'onCreateMessage')
-      let service = this.$feathers.service('messages')
-      service.create({
-        text: 'Brand new message from vue'
+      this.tasksService.create({
+        product: 'C180823001100000000007',
+        stage: 0
+      })
+    },
+    onMove () {
+      console.log('sheduler--tasks', this.tasksService)
+    },
+    onReset () {
+      // 删除所有测试数据
+      this.tasksService.remove(null, {
+        query: {
+          stage: 0
+        }
+      }).then(result => {
+        console.log('log-----reset', result)
       })
     }
   }
