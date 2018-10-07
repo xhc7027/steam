@@ -3,6 +3,7 @@ export default {
   services: [
     '/users',
     '/messsages',
-    '/tasks'
+    '/tasks',
+    '/command'
   ]
 }

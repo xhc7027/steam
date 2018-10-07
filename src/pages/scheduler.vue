@@ -35,10 +35,19 @@ export default {
       })
       this.tasksService = this.$feathers.service('tasks')
       this.tasksService.on('created', task => {
+        console.log('task created=======================')
         this.refresh()
       })
       this.tasksService.on('updated', task => {
+        console.log('task updated=======================')
         this.refresh()
+      })
+      this.$feathers.service('command').on('goto', args => {
+        console.log('COMMAND GOTO --------------------------------------', args)
+      })
+      this.$feathers.service('messages').on('done', args => {
+        console.log('COMMAND DONE --------------------------------------', args)
+        this.notice('DONE ' + args.stage)
       })
       this.refresh()
     }).catch(e => {
