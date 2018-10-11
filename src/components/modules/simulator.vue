@@ -25,7 +25,7 @@
     <p>&nbsp;</p>
     <h2>模拟从检测机发送指令 (message goto)</h2>
     <div class="buttons row">
-      <q-btn color="secondary" @click="message('hello')">HELLO</q-btn>
+      <q-btn color="secondary" @click="messageHello(123)">HELLO</q-btn>
       <q-btn color="secondary" @click="messageGoto('lcd.white')">LCD</q-btn>
       <q-btn color="secondary" @click="messageGoto('touch')">TOUCH</q-btn>
       <q-btn color="secondary" @click="messageGoto('camera1')">CAMERA 1</q-btn>
@@ -70,17 +70,22 @@ export default {
     commandGoto (stage) {
       this.command('goto', stage)
     },
-    message (type, stage) {
+    message (type, stage, params) {
+      params = params || {}
+      if (stage) {
+        params.stage = stage
+      }
+      params.sn = this.sn2
       this.$feathers.service('messages').create({
         type: type,
-        params: {
-          stage: stage,
-          sn: this.sn2
-        }
+        params: params
       })
     },
     messageGoto (stage) {
       this.message('goto', stage)
+    },
+    messageHello (random) {
+      this.message('hello', '', {random: random})
     },
     onReset () { // 删除所有测试数据
       this.$feathers.service('tasks').remove(null, {
