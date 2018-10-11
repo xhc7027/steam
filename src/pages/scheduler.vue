@@ -42,7 +42,7 @@ export default {
         console.log('task updated=======================')
         this.refresh()
       })
-      this.$feathers.service('command').on('goto', args => {
+      this.$feathers.service('commands').on('goto', args => {
         console.log('COMMAND GOTO --------------------------------------', args)
       })
       this.$feathers.service('messages').on('done', args => {

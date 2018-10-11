@@ -11,10 +11,10 @@
     <p>&nbsp;</p>
     <h2>发送指令到APP (command goto)</h2>
     <div class="buttons row">
-      <q-btn color="secondary" @click="commandGoto('lcd.white')">LCD white</q-btn>
-      <q-btn color="secondary" @click="commandGoto('lcd.blue')">LCD blue</q-btn>
-      <q-btn color="secondary" @click="commandGoto('lcd.grey')">LCD grey</q-btn>
-      <q-btn color="secondary" @click="commandGoto('lcd.red')">LCD red</q-btn>
+      <q-btn color="secondary" @click="commandGoto('lcd.white')">LCD.white</q-btn>
+      <q-btn color="secondary" @click="commandGoto('lcd.blue')">LCD.blue</q-btn>
+      <q-btn color="secondary" @click="commandGoto('lcd.grey')">LCD.grey</q-btn>
+      <q-btn color="secondary" @click="commandGoto('lcd.red')">LCD.red</q-btn>
       <q-btn color="secondary" @click="commandGoto('touch')">TOUCH</q-btn>
       <q-btn color="secondary" @click="commandGoto('camera1')">CAMERA 1</q-btn>
       <q-btn color="secondary" @click="commandGoto('camera2')">CAMERA 2</q-btn>
@@ -25,7 +25,8 @@
     <p>&nbsp;</p>
     <h2>模拟从检测机发送指令 (message goto)</h2>
     <div class="buttons row">
-      <q-btn color="secondary" @click="messageGoto('lcd')">LCD</q-btn>
+      <q-btn color="secondary" @click="message('hello')">HELLO</q-btn>
+      <q-btn color="secondary" @click="messageGoto('lcd.white')">LCD</q-btn>
       <q-btn color="secondary" @click="messageGoto('touch')">TOUCH</q-btn>
       <q-btn color="secondary" @click="messageGoto('camera1')">CAMERA 1</q-btn>
       <q-btn color="secondary" @click="messageGoto('camera2')">CAMERA 2</q-btn>
@@ -54,25 +55,32 @@ export default {
     onMove () {
       console.log('sheduler--tasks', this.tasksService)
     },
-    commandGoto (stage) {
-      this.$feathers.service('command').create({
-        name: 'goto',
-        params: {
-          stage: stage,
-          sn: this.sn2
-        }
-      }) // work
-      // console.log('$feather', this.$feathers.service('command'))
-      // this.$feathers.service('command').emit('goto, {stage: 'lcd', color: 'white'}) // not work
+    command (name, stage) {
+      let params = {
+        sn: this.sn2
+      }
+      if (stage) {
+        params.stage = stage
+      }
+      this.$feathers.service('commands').create({
+        name: name,
+        params: params
+      })
     },
-    messageGoto (stage) {
+    commandGoto (stage) {
+      this.command('goto', stage)
+    },
+    message (type, stage) {
       this.$feathers.service('messages').create({
-        type: 'goto',
+        type: type,
         params: {
           stage: stage,
           sn: this.sn2
         }
       })
+    },
+    messageGoto (stage) {
+      this.message('goto', stage)
     },
     onReset () { // 删除所有测试数据
       this.$feathers.service('tasks').remove(null, {
