@@ -23,9 +23,13 @@
       <q-btn color="secondary" @click="commandGoto('sensors')">SENSORS</q-btn>
     </div>
     <p>&nbsp;</p>
-    <h2>模拟从检测机发送指令 (message goto)</h2>
+    <h2>模拟从检测机发送指令 (message)</h2>
     <div class="buttons row">
       <q-btn color="secondary" @click="messageHello(123)">HELLO</q-btn>
+      <q-btn color="secondary" @click="message('checkout')">CHECKOUT</q-btn>
+    </div>
+    <h2>message goto</h2>
+    <div class="buttons row">
       <q-btn color="secondary" @click="messageGoto('lcd.white')">LCD</q-btn>
       <q-btn color="secondary" @click="messageGoto('touch')">TOUCH</q-btn>
       <q-btn color="secondary" @click="messageGoto('camera1')">CAMERA 1</q-btn>

@@ -26,9 +26,6 @@ export default {
     // 整理传进来的items数据
     computedItems () {
       return this.items.map(item => {
-        if (item.label.indexOf('多选') !== -1) {
-          item.multiple = true
-        }
         return item
       })
     }

@@ -10,12 +10,8 @@ export default {
           value: '$resultSerial'
         },
         {
-          name: 'skuList',
-          value: '$skuItems'
-        },
-        {
-          name: 'checkList',
-          value: '$extraItems'
+          name: 'detectOptions',
+          value: '$sections'
         },
         {
           name: 'detVersion',
@@ -35,26 +31,27 @@ export default {
       ],
       hooks: {
         afterParams: input => {
+          console.log('afterParams------------------', input)
           input.login_token = localStorage.getItem('token')
           input.login_user_id = localStorage.getItem('userid')
-          input.skuList = input.skuList.map(q => ({
-            questionName: q.label,
-            questionId: q.id,
-            select: q.selected,
-            answerList: q.options.map(a => ({
-              answerId: a.value,
-              answerName: a.label,
-              select: a.selected || false
-            }))
-          }))
-          input.checkList = input.checkList.map(q => ({
-            questionName: q.label,
-            questionId: q.id,
-            select: q.selected,
-            answerList: q.options.map(a => ({
-              answerId: a.value,
-              answerName: a.label,
-              select: a.selected || false
+          input.detectOptions = input.detectOptions.map(q => ({
+            id: q.id,
+            name: q.label,
+            isAdd: q.isAdd, // 无用字段
+            isAddOption: q.isAddOption, // 无用字段
+            isEditor: q.isEditor, // 无用字段
+            childs: q.questions.map(a => ({
+              id: a.id,
+              name: a.label,
+              isMultiple: a.multiple,
+              isDet: a.isDet, // 无用字段
+              isSelect: a.finished, // 无用字段
+              childs: a.options.map(o => ({
+                id: o.value,
+                name: o.label,
+                isDefective: o.isDefective, // 无用字段
+                select: o.selected
+              }))
             }))
           }))
           return input

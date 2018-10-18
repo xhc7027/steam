@@ -21,16 +21,17 @@ export default {
           name: 'detVersion',
           value: '$version',
           default: 'v1.0.0'
+        },
+        {
+          name: 'sourceDetect',
+          value: '$source',
+          default: 'v1.0.0'
         }
       ],
       fields: [
         {
-          name: 'skuItems',
-          from: 'skuList'
-        },
-        {
-          name: 'extraItems',
-          from: 'checkList'
+          name: 'sections',
+          from: 'detectOptions'
         }
       ],
       hooks: {
@@ -38,30 +39,33 @@ export default {
         afterParams: input => input,
         beforeFields: input => input,
         afterFields: input => {
+          let sections = input.sections &&
+            input.sections.constructor.name === 'Array' ? input.sections : []
           let output = {
-            skuItems: input.skuItems ? input.skuItems.map(q => ({
-              id: q.questionId,
-              name: 'field-' + q.questionId,
-              label: q.questionName,
-              finished: q.isSelect || false,
-              options: q.answerList.map(a => ({
-                value: a.answerId,
-                label: a.answerName,
-                selected: a.select || false
+            sections: sections.map(q => ({
+              id: q.id,
+              name: 'section-' + q.id,
+              label: q.name,
+              isAdd: q.isAdd, // 无用字段
+              isAddOption: q.isAddOption, // 无用字段
+              isEditor: q.isEditor, // 无用字段
+              questions: q.childs.map(a => ({
+                id: a.id,
+                name: 'filed-' + a.id,
+                label: a.name,
+                multiple: a.isMultiple,
+                isDet: a.isDet, // 无用字段
+                finished: a.isSelect, // 无用字段
+                options: a.childs.map(o => ({
+                  label: o.name,
+                  isDefective: o.isDefective, // 无用字段
+                  selected: o.select,
+                  value: o.id
+                }))
               }))
-            })) : [],
-            extraItems: input.extraItems ? input.extraItems.map(q => ({
-              id: q.questionId,
-              name: 'field-' + q.questionId,
-              label: q.questionName,
-              finished: q.isSelect || false,
-              options: q.answerList.map(a => ({
-                value: a.answerId,
-                label: a.answerName,
-                selected: a.select || false
-              }))
-            })) : []
+            }))
           }
+          console.log('log-----', output)
           return output
         }
       }

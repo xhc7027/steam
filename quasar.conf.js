@@ -68,6 +68,7 @@ module.exports = function (ctx) {
         'QItemMain',
         'QItemSide',
         'QInput',
+        'QSelect',
         'QField',
         'QBtnToggle',
         'QCollapsible',

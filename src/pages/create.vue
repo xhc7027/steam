@@ -32,34 +32,35 @@
             message="请输入屏幕条码"
             ></validate-error>
           </q-input>
-          <q-btn
-            class="save-btn save1-btn"
-            v-show="stage === 1"
-            @click="save1()"
-            color="secondary"
-            width="200"
-            size="md"
-            label="提交"
-          />
+          <div class="row">
+            <div class="col-6">
+              <q-select class="clients-select"
+                float-label="业务方"
+                v-model="source"
+                :options="sources"></q-select>
+            </div>
+            <div class="col-6">
+            </div>
+          </div>
+            <q-btn
+              class="save-btn save1-btn"
+              v-show="stage === 1"
+              @click="save1()"
+              color="secondary"
+              width="200"
+              size="md"
+              label="提交"
+            />
         </form>
-      <div class="sku-questions" v-show="stage > 1">
-        <h4>SKU选项</h4>
+      <div class="sku-questions" v-for="s in sections" :key="s.id">
+        <h4>{{s.label}}</h4>
         <hsb-questions
           name="questions1"
-          :items="computedSkuItems"
-          v-model="skuResults"
-          v-validate="`full:${computedSkuItems.length}`"
+          :items="s.questions.filter(q => !q.finished)"
+          v-model="results[s.name]"
+          v-validate="`full:${s.questions.length}`"
           data-vv-scope="calc">
           </hsb-questions>
-      </div>
-      <div class="extra-questions" v-show="stage > 1">
-        <h4>手工输入选项</h4>
-        <hsb-questions
-          name="questions2"
-          :items="computedExtraItems"
-          v-validate="`full:${computedExtraItems.length}`"
-          v-model="extraResults"
-          data-vv-scope="calc"></hsb-questions>
       </div>
       <q-field label="备注" :label-width="2" v-show="stage > 1">
         <q-input v-model="memo"
@@ -105,15 +106,21 @@ export default {
   data () {
     return {
       stage: 1, // 保存步骤 1=扫描条码 2=保存手填选项
-      orderSerial: '', // 机身条码
-      resultSerial: '', // 屏幕条码(app检测结果)
-      skuItems: [],
-      extraItems: [],
-      skuResults: [],
-      extraResults: [],
+      orderSerial: '010118101600038S', // 机身条码
+      resultSerial: '100000002264', // 屏幕条码(app检测结果)
+      sections: [],
+      results: {},
       memo: '',
       priceResult: 0,
-      input1: ''
+      source: 'xy',
+      sources: [{
+        label: '闲鱼验机',
+        value: 'xy'
+      },
+      {
+        label: 'OMS',
+        value: 'oms'
+      }]
     }
   },
   created () {
@@ -123,12 +130,6 @@ export default {
     this.$refs.orderSerialInput.focus()
   },
   computed: {
-    computedSkuItems () {
-      return this.skuItems.filter(item => item)
-    },
-    computedExtraItems () {
-      return this.extraItems.filter(item => !item.finished)
-    }
   },
   methods: {
     save1 () {
@@ -137,11 +138,11 @@ export default {
           this.$http.post('/bind', {
             data: {
               orderSerial: this.orderSerial,
-              resultSerial: this.resultSerial
+              resultSerial: this.resultSerial,
+              source: this.source
             }
           }).then(response => {
-            this.skuItems = response.skuItems
-            this.extraItems = response.extraItems
+            this.sections = response.sections
             this.stage = 2
           })
         } else {
@@ -150,8 +151,14 @@ export default {
       })
     },
     save2 () {
-      this.$validator.validateAll('calc').then(result => {
-        if (result) {
+      this.$validator.validateAll('calc').then(validated => {
+        console.log('save2---------------', this.results, this.sections)
+        let full = Object.keys(this.results).every(key =>
+          Object.keys(this.results[key]).length === 
+            this.sections.find(s => s.name === key)
+              .questions.filter(q => !q.finished).length
+        )
+        if (full) {
           this.$http.post('/calc', {
             data: {
               resultSerial: this.resultSerial
@@ -171,25 +178,22 @@ export default {
       this.stage = 1
     },
     calcBeforeParams (input) {
-      this.skuItems.forEach(s => {
-        let selected = this.skuResults['field-' + s.id]
-        if (selected) {
-          s.options.forEach(o => {
-            o.selected = selected.includes(o.value)
-          })
-        }
-      })
-      this.extraItems.forEach(s => {
-        let selected = this.extraResults['field-' + s.id]
-        if (selected) {
-          s.options.forEach(o => {
-            o.selected = selected && selected.includes(o.value)
+      console.log('calBeforefParamas--------', this.results)
+      this.sections.forEach(s => {
+        let sectionResult = this.results[s.name]
+        if (sectionResult) {
+          s.questions.forEach(q => {
+            let selected = sectionResult[q.name]
+            if (selected) {
+              q.options.forEach(o => {
+                o.selected = selected.includes(o.value)
+              })
+            }
           })
         }
       })
       return Object.assign({}, {
-        skuItems: this.skuItems,
-        extraItems: this.extraItems
+        sections: this.sections
       }, input)
     },
     /**
