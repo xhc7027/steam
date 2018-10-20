@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     login () {
-      this.$validator.validateAll('calc').then(result => {
+      this.$validator.validateAll().then(result => {
         if (result) {
           this.$http.post('/login', {
             data: {
@@ -47,6 +47,7 @@ export default {
             }
           }).then(response => {
             localStorage.setItem('userid', response.userid)
+            localStorage.setItem('username', this.username)
             localStorage.setItem('token', response.token)
             this.$router.push(this.$route.query.r)
           })

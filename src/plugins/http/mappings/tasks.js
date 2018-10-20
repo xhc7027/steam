@@ -1,8 +1,90 @@
 export default {
   apis: [
     {
-      path: '/bind', // 前端path
-      to: '/bindDetectBarCode', // 后端path
+      path: '/bind-oms', // 前端path
+      to: '/bindDetectBarCode', // 后端path 大检测用
+      method: 'post',
+      params: [ // 传入参数转换
+        {
+          name: 'codeInfo',
+          value: '$orderSerial'
+        },
+        {
+          name: 'sourceDetect',
+          value: '$source'
+        },
+        {
+          name: 'uniqueKey',
+          value: '$resultSerial'
+        },
+        {
+          name: '_interface',
+          value: 'det_getProfessionDetect'
+        },
+        {
+          name: 'detVersion',
+          value: '$version',
+          default: 'v1.0.0'
+        }
+      ],
+      fields: [
+        {
+          name: 'skuItems',
+          from: 'skuList'
+        },
+        {
+          name: 'extraItems',
+          from: 'checkList'
+        }
+      ],
+      hooks: {
+        beforeParams: input => input,
+        afterParams: input => input,
+        beforeFields: input => input,
+        afterFields: input => {
+          let output = {
+            sections: [
+              {
+                id: '1',
+                name: 'section-1',
+                label: 'SKU选项',
+                questions: input.skuItems ? input.skuItems.map(q => ({
+                  id: q.questionId,
+                  name: 'field-' + q.questionId,
+                  label: q.questionName,
+                  finished: q.isSelect || false,
+                  options: q.answerList.map(a => ({
+                    value: a.answerId,
+                    label: a.answerName,
+                    selected: a.select || false
+                  }))
+                })) : []
+              },
+              {
+                id: '2',
+                name: 'section-2',
+                label: '手动选项',
+                questions: input.extraItems ? input.extraItems.map(q => ({
+                  id: q.questionId,
+                  name: 'field-' + q.questionId,
+                  label: q.questionName,
+                  finished: q.isSelect || false,
+                  options: q.answerList.map(a => ({
+                    value: a.answerId,
+                    label: a.answerName,
+                    selected: a.select || false
+                  }))
+                })) : []
+              }
+            ]
+          }
+          return output
+        }
+      }
+    },
+    {
+      path: '/bind-xy',
+      to: '/bindXyDetectBarCode', // 后端path 闲鱼用
       method: 'post',
       params: [ // 传入参数转换
         {
@@ -24,14 +106,13 @@ export default {
         },
         {
           name: 'sourceDetect',
-          value: '$source',
-          default: 'v1.0.0'
+          value: '$source'
         }
       ],
       fields: [
         {
           name: 'sections',
-          from: 'detectOptions'
+          from: 'checkList'
         }
       ],
       hooks: {
@@ -59,7 +140,7 @@ export default {
                 options: a.childs.map(o => ({
                   label: o.name,
                   isDefective: o.isDefective, // 无用字段
-                  selected: o.select,
+                  selected: o.isSelect,
                   value: o.id
                 }))
               }))

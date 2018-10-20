@@ -33,44 +33,73 @@
             ></validate-error>
           </q-input>
           <div class="row">
-            <div class="col-6">
+            <div class="col-4">
               <q-select class="clients-select"
+                :disable="stage !== 1"
                 float-label="业务方"
                 v-model="source"
                 :options="sources"></q-select>
             </div>
-            <div class="col-6">
+            <div class="col-4">
+              <q-input v-model="orderNumber"
+                v-if="this.source === 'xy'"
+                name="order_number"
+                float-label="订单号" placeholder="输入"
+                spellcheck="false"
+                v-validate="'required'"
+                :disable="stage !== 1"
+                :error="errors.has('order_number', 'bind')"
+                @keyup.13="save1">
+                <validate-error
+                  message="请输入订单号"
+                  ></validate-error>
+                </q-input>
+            </div>
+            <div class="col-4">
+              <q-input v-model="taskNumber"
+                v-if="this.source === 'xy'"
+                name="task_number"
+                float-label="检测单号" placeholder="输入"
+                spellcheck="false"
+                v-validate="'required'"
+                :disable="stage !== 1"
+                :error="errors.has('task_number', 'bind')"
+                @keyup.13="save1">
+                <validate-error
+                  message="请输入检测单号"
+                  ></validate-error>
+                </q-input>
             </div>
           </div>
-            <q-btn
-              class="save-btn save1-btn"
-              v-show="stage === 1"
-              @click="save1()"
-              color="secondary"
-              width="200"
-              size="md"
-              label="提交"
-            />
-        </form>
-      <div class="sku-questions" v-for="s in sections" :key="s.id">
-        <h4>{{s.label}}</h4>
-        <hsb-questions
-          name="questions1"
-          :items="s.questions.filter(q => !q.finished)"
-          v-model="results[s.name]"
-          v-validate="`full:${s.questions.length}`"
-          data-vv-scope="calc">
-          </hsb-questions>
+          <q-btn
+            class="save-btn save1-btn"
+            v-show="stage === 1"
+            @click="save1()"
+            color="secondary"
+            width="200"
+            size="md"
+            label="提交"
+          />
+      </form>
+      <div class="stage-2" v-if="stage === 2">
+        <div class="sku-questions" v-for="s in sections" :key="s.id">
+          <h4>{{s.label}}</h4>
+          <hsb-questions
+            name="questions1"
+            :items="s.questions.filter(q => !q.finished)"
+            v-model="results[s.name]">
+            </hsb-questions>
+        </div>
+        <q-field label="备注" :label-width="2" v-show="stage > 1">
+          <q-input v-model="memo"
+            type="textarea"
+            color="tertiary"
+            rows="4"
+            text-color="#666"
+            inverted-light
+          ></q-input>
+        </q-field>
       </div>
-      <q-field label="备注" :label-width="2" v-show="stage > 1">
-        <q-input v-model="memo"
-          type="textarea"
-          color="tertiary"
-          rows="4"
-          text-color="#666"
-          inverted-light
-        ></q-input>
-      </q-field>
       <p>&nbsp;</p>
       <div class="price-result" v-show="stage > 2">
         <h6>估价结果</h6>
@@ -108,11 +137,13 @@ export default {
       stage: 1, // 保存步骤 1=扫描条码 2=保存手填选项
       orderSerial: '010118101600038S', // 机身条码
       resultSerial: '100000002264', // 屏幕条码(app检测结果)
+      source: 'xy',
+      orderNumber: '', // 订单号 闲鱼用
+      taskNumber: '', // 检测单号 闲鱼用
       sections: [],
       results: {},
       memo: '',
       priceResult: 0,
-      source: 'xy',
       sources: [{
         label: '闲鱼验机',
         value: 'xy'
@@ -133,14 +164,19 @@ export default {
   },
   methods: {
     save1 () {
+      let paths = { // 按source调用不同接口
+        oms: '/bind-oms',
+        xy: '/bind-xy'
+      }
       this.$validator.validateAll('bind').then(result => {
         if (result) {
-          this.$http.post('/bind', {
-            data: {
-              orderSerial: this.orderSerial,
-              resultSerial: this.resultSerial,
-              source: this.source
-            }
+          let data = {
+            orderSerial: this.orderSerial,
+            resultSerial: this.resultSerial,
+            source: this.source
+          }
+          this.$http.post(paths[this.source], {
+            data: data
           }).then(response => {
             this.sections = response.sections
             this.stage = 2
@@ -151,28 +187,39 @@ export default {
       })
     },
     save2 () {
-      this.$validator.validateAll('calc').then(validated => {
-        console.log('save2---------------', this.results, this.sections)
-        let full = Object.keys(this.results).every(key =>
-          Object.keys(this.results[key]).length === 
+      // 提交检测结果
+      // 验证 所有问题都有答案
+      let paths = { // 按source调用不同接口
+        oms: '/save-oms',
+        xy: '/save-xy'
+      }
+      let keys = Object.keys(this.results)
+      let full = keys.length > 0 &&
+        keys.every(key =>
+          Object.keys(this.results[key]).length ===
             this.sections.find(s => s.name === key)
-              .questions.filter(q => !q.finished).length
+              .questions.filter(q => !q.finished).length // 先前未选答案之总数
         )
-        if (full) {
-          this.$http.post('/calc', {
-            data: {
-              resultSerial: this.resultSerial
-            },
-            beforeParams: this.calcBeforeParams
-          }).then(response => {
-            this.stage = 3
-            this.priceResult = response.price - 0
-            this.notice('已保存')
-          })
-        } else {
-          this.notice('有选项未填写')
+      if (full) {
+        let data = {
+          resultSerial: this.resultSerial,
+          source: this.source
         }
-      })
+        if (this.source === 'xy') {
+          data.orderNumber = this.orderNumber
+          data.taskNumber = this.taskNumber
+        }
+        this.$http.post(paths[this.source], {
+          data: data,
+          beforeParams: this.calcBeforeParams
+        }).then(response => {
+          this.stage = 3
+          this.priceResult = response.price - 0
+          this.notice('已保存')
+        })
+      } else {
+        this.notice('有选项未填写')
+      }
     },
     cancel () {
       this.stage = 1
@@ -185,6 +232,7 @@ export default {
           s.questions.forEach(q => {
             let selected = sectionResult[q.name]
             if (selected) {
+              q.finished = true
               q.options.forEach(o => {
                 o.selected = selected.includes(o.value)
               })
