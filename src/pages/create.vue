@@ -121,6 +121,15 @@
         size="md"
         label="取消"
       />
+      <q-btn
+        class="next-btn"
+        v-show="stage !== 1"
+        @click="next()"
+        color="tertiary"
+        text-color="secondary"
+        size="md"
+        label="继续检测"
+      />
     </div>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
@@ -193,17 +202,18 @@ export default {
         oms: '/save-oms',
         xy: '/save-xy'
       }
-      let keys = Object.keys(this.results)
-      let full = keys.length > 0 &&
-        keys.every(key =>
-          Object.keys(this.results[key]).length ===
-            this.sections.find(s => s.name === key)
-              .questions.filter(q => !q.finished).length // 先前未选答案之总数
-        )
+      let keys = this.sections.map(s => s.name)
+      let full = keys.every(key =>
+        this.results.length === this.sections.length &&
+        Object.keys(this.results[key]).length ===
+          this.sections.find(s => s.name === key)
+            .questions.filter(q => !q.finished).length // 先前未选答案之总数
+      )
       if (full) {
         let data = {
           resultSerial: this.resultSerial,
-          source: this.source
+          source: this.source,
+          memo: this.memo
         }
         if (this.source === 'xy') {
           data.orderNumber = this.orderNumber
@@ -224,9 +234,14 @@ export default {
     cancel () {
       this.stage = 1
     },
+    next () {
+      this.stage = 1
+      this.sections = []
+    },
     calcBeforeParams (input) {
-      console.log('calBeforefParamas--------', this.results)
-      this.sections.forEach(s => {
+      console.log('calBeforefParamas--------', input)
+      let sectionsCopy = JSON.parse(JSON.stringify(this.sections))
+      sectionsCopy.forEach(s => {
         let sectionResult = this.results[s.name]
         if (sectionResult) {
           s.questions.forEach(q => {
@@ -241,7 +256,7 @@ export default {
         }
       })
       return Object.assign({}, {
-        sections: this.sections
+        sections: sectionsCopy
       }, input)
     },
     /**

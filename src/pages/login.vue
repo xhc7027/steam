@@ -49,7 +49,7 @@ export default {
             localStorage.setItem('userid', response.userid)
             localStorage.setItem('username', this.username)
             localStorage.setItem('token', response.token)
-            this.$router.push(this.$route.query.r)
+            this.$router.push(this.$route.query.r || '/create')
           })
         } else {
           this.notice('请填写用户名密码')

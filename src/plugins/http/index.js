@@ -40,6 +40,9 @@ let __config = {
       data: input._data._data // 之后进入fields匹配
     }
     return output
+  },
+  hooks: {
+    authExpired: () => {}
   }
 }
 
@@ -49,5 +52,8 @@ http.setup({
 })
 
 export default ({app, router, Vue}) => {
+  http.hook('authExpired', () => {
+    Vue.prototype.$bus.emit('loginRequired')
+  })
   Vue.prototype.$http = http
 }

@@ -3,11 +3,11 @@
     <div class="line row gutter-xs">
       <div class="station entry col col-2">
         <label>进料</label>
-        <h6>{{tasks[0] ? tasks[0].product.substr(-4) : '-'}}</h6>
+        <h6>{{tasks[0] ? tasks[0].sn.substr(-4) : '-'}}</h6>
       </div>
       <div v-for="x in [1,2,3,4,5,6,7,8,9]" :key="x" class="station col col-1">
         <label class="number">{{x}}</label>
-        <h6 text-color="secondary">{{tasks[x] ? tasks[x].product.substr(-4) : '-'}}</h6>
+        <h6 text-color="secondary">{{tasks[x] ? tasks[x].sn.substr(-4) : '-'}}</h6>
       </div>
       <div class="station col col-1">
         <label>出料</label>

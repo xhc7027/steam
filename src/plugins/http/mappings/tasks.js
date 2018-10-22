@@ -117,7 +117,12 @@ export default {
       ],
       hooks: {
         beforeParams: input => input,
-        afterParams: input => input,
+        afterParams: input => {
+          input.login_token = localStorage.getItem('token')
+          input.login_user_id = localStorage.getItem('userid')
+          input.login_user_name = localStorage.getItem('username')
+          return input
+        },
         beforeFields: input => input,
         afterFields: input => {
           let sections = input.sections &&

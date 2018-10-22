@@ -38,13 +38,7 @@ export default {
         }
       }),
       fields: [
-      ],
-      converts: {
-        default: (input) => {
-          let result = input
-          return result
-        }
-      }
+      ]
     }
   ]
 }

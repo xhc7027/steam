@@ -22,7 +22,8 @@ export default function (/* { store, ssrContext } */) {
   })
 
   router.beforeEach((to, from, next) => {
-    if (to.meta.authRequired !== false && !localStorage.getItem('userid')) {
+    if (to.meta.authRequired !== false &&
+      !localStorage.getItem('userid')) {
       next({
         path: '/login',
         query: {

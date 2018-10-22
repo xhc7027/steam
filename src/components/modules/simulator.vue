@@ -52,7 +52,7 @@ export default {
   methods: {
     onCreateTask () {
       this.$feathers.service('tasks').create({
-        product: this.sn,
+        sn: this.sn,
         stage: 0
       })
     },
