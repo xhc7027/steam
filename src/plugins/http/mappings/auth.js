@@ -2,33 +2,20 @@ export default {
   apis: [
     {
       path: '/login',
-      to: 'http://api-amc.huishoubao.com.cn/authlogin',
+      to: 'http://api-amc.huishoubao.com.cn/login',
       method: 'post',
       params: [
         {
           name: 'system',
-          value: 'upin'
+          value: 'product-line'
         },
         {
           name: 'system_id',
-          value: 122
-        },
-        {
-          name: 'time',
-          value: Math.round((new Date()).getTime() / 1000)
+          value: '114'
         }
       ],
       boxing: input => {
-        let output = {
-          head: {
-            interface: 'authlogin',
-            msgtype: 'request',
-            remark: '',
-            version: '0.01'
-          }
-        }
-        output.params = input
-        return output
+        return input
       },
       unboxing: input => ({
         code: input.body.retcode,
@@ -42,3 +29,6 @@ export default {
     }
   ]
 }
+// 'username': 'guoyuxiang',
+// 'passworid': 'a123123',
+// 'system_id': '114'

@@ -82,7 +82,7 @@
           />
       </form>
       <div class="stage-2" v-if="stage === 2">
-        <div class="sku-questions" v-for="s in sections" :key="s.id">
+        <div class="sku-questions" v-for="s in extraSections" :key="s.id">
           <h4>{{s.label}}</h4>
           <hsb-questions
             name="questions1"
@@ -170,6 +170,9 @@ export default {
     this.$refs.orderSerialInput.focus()
   },
   computed: {
+    extraSections: function () {
+      return this.sections.filter(s => s.questions.some(q => !q.finished))
+    }
   },
   methods: {
     save1 () {
@@ -202,13 +205,13 @@ export default {
         oms: '/save-oms',
         xy: '/save-xy'
       }
-      let keys = this.sections.map(s => s.name)
-      let full = keys.every(key =>
-        this.results.length === this.sections.length &&
-        Object.keys(this.results[key]).length ===
-          this.sections.find(s => s.name === key)
-            .questions.filter(q => !q.finished).length // 先前未选答案之总数
-      )
+      let keys = this.extraSections.map(s => s.name)
+      let full = keys.length === this.extraSections.length &&
+        keys.every(key =>
+          Object.keys(this.results[key]).length ===
+            this.sections.find(s => s.name === key)
+              .questions.filter(q => !q.finished).length // 先前未选答案之总数
+        )
       if (full) {
         let data = {
           resultSerial: this.resultSerial,

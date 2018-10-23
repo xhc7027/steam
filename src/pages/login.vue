@@ -33,7 +33,8 @@ export default {
   data () {
     return {
       username: 'guoyuxiang',
-      password: 'a123123'
+      password: 'a123123',
+      system_id: '114'
     }
   },
   methods: {
@@ -43,12 +44,14 @@ export default {
           this.$http.post('/login', {
             data: {
               username: this.username,
-              password: this.password
+              password: this.password,
+              system_id: this.system_id
             }
           }).then(response => {
             localStorage.setItem('userid', response.userid)
             localStorage.setItem('username', this.username)
             localStorage.setItem('token', response.token)
+            localStorage.setItem('system_id', response.token)
             this.$router.push(this.$route.query.r || '/create')
           })
         } else {
