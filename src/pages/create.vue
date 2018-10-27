@@ -80,6 +80,15 @@
             size="md"
             label="提交"
           />
+          <q-btn
+            class="save-btn save1-btn"
+            v-show="stage === 1"
+            @click="openNotify()"
+            color="secondary"
+            width="200"
+            size="md"
+            label="Notify"
+          />
       </form>
       <div class="stage-2" v-if="stage === 2">
         <div class="sku-questions" v-for="s in extraSections" :key="s.id">
@@ -257,7 +266,7 @@ export default {
       this.sections = []
     },
     openNotify () {
-      this.modal('Notify')
+      this.modal('login')
     },
     calcBeforeParams (input) {
       console.log('calBeforefParamas--------', input)
