@@ -144,11 +144,11 @@ export default {
   data () {
     return {
       stage: 1, // 保存步骤 1=扫描条码 2=保存手填选项
-      orderSerial: '010118101600038S', // 机身条码
-      resultSerial: '100000002264', // 屏幕条码(app检测结果)
+      orderSerial: '', // 机身条码 010118102300115S
+      resultSerial: '', // 屏幕条码(app检测结果) 100000000011
       source: 'xy',
-      orderNumber: '', // 订单号 闲鱼用
-      taskNumber: '', // 检测单号 闲鱼用
+      orderNumber: '', // 订单号 闲鱼用 501
+      taskNumber: '', // 检测单号 闲鱼用 1701
       sections: [],
       results: {},
       memo: '',
@@ -190,8 +190,12 @@ export default {
           this.$http.post(paths[this.source], {
             data: data
           }).then(response => {
-            this.sections = response.sections
-            this.stage = 2
+            if (response.code === '0') {
+              this.sections = response.data.sections
+              this.stage = 2
+            } else {
+              this.notice(response.message)
+            }
           })
         } else {
           this.$refs.orderSerialInput.focus()
@@ -226,9 +230,15 @@ export default {
           data: data,
           beforeParams: this.calcBeforeParams
         }).then(response => {
-          this.stage = 3
-          this.priceResult = response.price - 0
-          this.notice('已保存')
+          if (response.code === '0') {
+            this.stage = 3
+            this.priceResult = response.data.price - 0
+            this.notice('已保存')
+          } else {
+            this.notice(response.message)
+          }
+        }, e => {
+          this.notice('保存出错')
         })
       } else {
         this.notice('有选项未填写')
@@ -238,8 +248,16 @@ export default {
       this.stage = 1
     },
     next () {
+      this.memo = ''
+      this.orderSerial = ''
+      this.resultSerial = ''
+      this.orderNumber = ''
+      this.taskNumber = ''
       this.stage = 1
       this.sections = []
+    },
+    openNotify () {
+      this.modal('Notify')
     },
     calcBeforeParams (input) {
       console.log('calBeforefParamas--------', input)

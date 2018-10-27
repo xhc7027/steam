@@ -6,11 +6,11 @@ module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
+      'bus',
       'http',
       'filters',
       'notify',
       'validate',
-      'bus',
       'feathers'
     ],
     css: [
@@ -72,14 +72,17 @@ module.exports = function (ctx) {
         'QField',
         'QBtnToggle',
         'QCollapsible',
-        'QTable'
+        'QTable',
+        'QModal',
+        'QModalLayout'
       ],
       directives: [
         'Ripple'
       ],
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog'
       ],
       iconSet: 'fontawesome'
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'

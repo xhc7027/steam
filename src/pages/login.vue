@@ -32,8 +32,8 @@ export default {
   name: 'login-page',
   data () {
     return {
-      username: 'guoyuxiang',
-      password: 'a123123',
+      username: '',
+      password: '',
       system_id: '114'
     }
   },
@@ -48,10 +48,10 @@ export default {
               system_id: this.system_id
             }
           }).then(response => {
-            localStorage.setItem('userid', response.userid)
+            let d = response.data
+            localStorage.setItem('userid', d.userid)
             localStorage.setItem('username', this.username)
-            localStorage.setItem('token', response.token)
-            localStorage.setItem('system_id', response.token)
+            localStorage.setItem('token', d.token)
             this.$router.push(this.$route.query.r || '/create')
           })
         } else {

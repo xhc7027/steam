@@ -37,6 +37,7 @@ let __config = {
   unboxing: input => {
     let output = {
       code: input._data._retcode,
+      message: input._data._retinfo,
       data: input._data._data // 之后进入fields匹配
     }
     return output
